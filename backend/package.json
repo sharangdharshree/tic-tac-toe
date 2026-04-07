@@ -1,0 +1,26 @@
+{
+  "name": "tictactoe-nakama",
+  "version": "1.0.0",
+  "description": "Backend of production-ready, real-time multiplayer Tic-Tac-Toe game with server-authoritative architecture using Nakama as the backend infrastructure.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sharangdharshree/tic-tac-toe.git"
+  },
+  "author": "sharangdhar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sharangdharshree/tic-tac-toe/issues"
+  },
+  "homepage": "https://github.com/sharangdharshree/tic-tac-toe#readme",
+  "dependencies": {
+    "@heroiclabs/nakama-js": "^2.8.0",
+    "nakama-runtime": "github:heroiclabs/nakama-common"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.2"
+  }
+}
