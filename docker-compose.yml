@@ -41,7 +41,7 @@ services:
       prometheus:
         condition: service_started
     volumes:
-      - ./:/nakama/data
+      - ./backend/build:/nakama/data/modules
     expose:
       - "7349"
       - "7350"

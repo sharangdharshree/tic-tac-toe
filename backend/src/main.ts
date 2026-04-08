@@ -1,3 +1,11 @@
-import { Client } from "@heroiclabs/nakama-js";
+/// <reference path="./auth.ts" />
 
-var client = new nakamajs.Client("defaultkey", "127.0.0.1", 7350);
+const InitModule: nkruntime.InitModule = function (
+  ctx: nkruntime.Context,
+  logger: nkruntime.Logger,
+  nk: nkruntime.Nakama,
+  initializer: nkruntime.Initializer,
+): void {
+  initializer.registerAfterAuthenticateDevice(afterAuthenticateDevice);
+  logger.info("Tic-tac-toe server initialized");
+};
