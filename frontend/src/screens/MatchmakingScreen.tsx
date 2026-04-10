@@ -3,9 +3,12 @@ import { useNakama } from "../hooks/useNakama";
 export function MatchmakingScreen() {
   const { cancelMatchmaker } = useNakama();
   return (
-    <div>
-      <p>Finding opponent...</p>
-      <button onClick={cancelMatchmaker}>Cancel</button>
+    <div className="screen">
+      <div className="spinner" />
+      <p className="pulse-text">Finding opponent...</p>
+      <button className="btn btn-secondary" onClick={cancelMatchmaker}>
+        Cancel
+      </button>
     </div>
   );
 }

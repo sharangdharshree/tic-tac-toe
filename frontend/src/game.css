@@ -1,0 +1,483 @@
+/* ─── Extra design tokens ─────────────────────────────────────────────────── */
+:root {
+  --x-color: var(--accent);
+  --o-color: #06b6d4;
+  --danger: #ef4444;
+  --success: #22c55e;
+  --cell-size: 120px;
+}
+
+/* ─── Keyframe animations ─────────────────────────────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.5); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes markAppear {
+  0%   { transform: scale(0) rotate(-15deg); opacity: 0; }
+  70%  { transform: scale(1.2) rotate(4deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg);  opacity: 1; }
+}
+
+@keyframes winPulse {
+  0%, 100% { background: var(--accent-bg); }
+  50%      { background: rgba(170, 59, 255, 0.28); }
+}
+
+@keyframes winPulseDark {
+  0%, 100% { background: var(--accent-bg); }
+  50%      { background: rgba(192, 132, 252, 0.32); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  15%      { transform: translateX(-8px); }
+  30%      { transform: translateX(8px); }
+  45%      { transform: translateX(-6px); }
+  60%      { transform: translateX(6px); }
+  75%      { transform: translateX(-3px); }
+  90%      { transform: translateX(3px); }
+}
+
+@keyframes dots {
+  0%   { content: '.'; }
+  33%  { content: '..'; }
+  66%  { content: '...'; }
+  100% { content: '.'; }
+}
+
+@keyframes timerShrink {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+/* ─── Shared screen wrapper ────────────────────────────────────────────────── */
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 48px 24px;
+  gap: 24px;
+  animation: fadeIn 0.3s ease both;
+}
+
+/* ─── Buttons ──────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: var(--sans);
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: box-shadow 0.2s, transform 0.15s, background 0.2s, border-color 0.2s;
+  text-decoration: none;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.btn-primary:hover {
+  box-shadow: 0 0 0 4px var(--accent-bg), 0 4px 16px var(--accent-border);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--accent-border);
+}
+.btn-secondary:hover {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+}
+
+/* ─── AuthScreen ───────────────────────────────────────────────────────────── */
+.game-title {
+  font-size: 64px;
+  font-weight: 700;
+  letter-spacing: -2px;
+  margin: 0;
+  background: linear-gradient(135deg, var(--accent) 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+
+  @media (max-width: 1024px) {
+    font-size: 44px;
+  }
+}
+
+.auth-subtitle {
+  color: var(--text);
+  font-size: 18px;
+  margin: -8px 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+/* ─── LobbyScreen ──────────────────────────────────────────────────────────── */
+.lobby-heading {
+  color: var(--text-h);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  margin: 0;
+}
+
+.mode-cards {
+  display: flex;
+  gap: 16px;
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+}
+
+.mode-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 32px;
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  min-width: 160px;
+  text-align: center;
+}
+.mode-card:hover {
+  border-color: var(--accent-border);
+  box-shadow: 0 0 0 3px var(--accent-bg), var(--shadow);
+  transform: translateY(-3px);
+}
+.mode-card:active {
+  transform: translateY(0);
+}
+
+.mode-card__icon {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.mode-card__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+}
+
+.mode-card__desc {
+  font-size: 14px;
+  color: var(--text);
+  margin: 0;
+}
+
+/* ─── MatchmakingScreen ────────────────────────────────────────────────────── */
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.pulse-text {
+  color: var(--text);
+  font-size: 18px;
+  animation: pulse 1.5s ease-in-out infinite;
+  margin: 0;
+}
+
+/* ─── CountdownScreen ──────────────────────────────────────────────────────── */
+.countdown-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-h);
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.countdown-token {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.token-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 22px;
+  font-weight: 800;
+  border: 2px solid currentColor;
+}
+
+.token-badge--x {
+  color: var(--x-color);
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+
+.token-badge--o {
+  color: var(--o-color);
+  background: rgba(6, 182, 212, 0.1);
+  border-color: rgba(6, 182, 212, 0.4);
+}
+
+/* ─── GameScreen ───────────────────────────────────────────────────────────── */
+.game-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 32px 24px;
+  gap: 20px;
+  animation: fadeIn 0.3s ease both;
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.player-info__vs {
+  color: var(--border);
+  font-weight: 600;
+}
+
+.player-info__you,
+.player-info__opp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.turn-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.turn-indicator--mine {
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+.turn-indicator__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.turn-indicator--mine .turn-indicator__dot {
+  background: var(--accent);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+/* Board */
+.board {
+  display: inline-grid;
+  grid-template-columns: repeat(3, var(--cell-size));
+  gap: 3px;
+  background: var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  padding: 3px;
+  box-shadow: var(--shadow);
+}
+
+.board--shake {
+  animation: shake 0.4s ease;
+}
+
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  line-height: 1;
+  transition: background 0.12s;
+  font-family: var(--heading);
+}
+
+.cell:not(.cell--x):not(.cell--o):not(.cell--disabled):hover {
+  background: var(--code-bg);
+}
+
+.cell--x {
+  color: var(--x-color);
+  cursor: default;
+  animation: markAppear 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.cell--o {
+  color: var(--o-color);
+  cursor: default;
+  animation: markAppear 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.cell--winning {
+  animation: winPulse 1.2s ease-in-out infinite;
+}
+
+@media (prefers-color-scheme: dark) {
+  .cell--winning {
+    animation: winPulseDark 1.2s ease-in-out infinite;
+  }
+}
+
+.cell--disabled {
+  cursor: not-allowed;
+}
+
+/* Timer bar (timed mode) */
+.timer-wrap {
+  width: calc(3 * var(--cell-size) + 6px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.timer-label {
+  font-size: 13px;
+  color: var(--text);
+  text-align: right;
+}
+
+.timer-track {
+  height: 4px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.timer-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.25s linear;
+}
+
+.timer-fill--warning {
+  background: var(--danger);
+}
+
+/* Rejected reason */
+.rejected-reason {
+  font-size: 13px;
+  color: var(--danger);
+  font-weight: 500;
+  min-height: 20px;
+  animation: fadeIn 0.2s ease both;
+}
+
+/* ─── ReconnectingScreen ───────────────────────────────────────────────────── */
+.reconnect-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+}
+
+.reconnect-sub {
+  color: var(--text);
+  margin: 0;
+  font-size: 16px;
+}
+
+.reconnect-sub::after {
+  display: inline-block;
+  width: 20px;
+  text-align: left;
+  animation: dots 1.2s steps(1) infinite;
+  content: '.';
+}
+
+.reconnect-timer {
+  font-size: 15px;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── ResultScreen ─────────────────────────────────────────────────────────── */
+.result-text {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin: 0;
+  animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+  }
+}
+
+.result-text--win  { color: var(--success); }
+.result-text--lose { color: var(--danger); }
+.result-text--draw { color: var(--text); }
+
+.result-cause {
+  font-size: 16px;
+  color: var(--text);
+  margin: -8px 0 8px;
+  animation: fadeIn 0.4s 0.15s ease both;
+}
