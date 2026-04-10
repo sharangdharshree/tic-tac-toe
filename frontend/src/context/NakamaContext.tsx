@@ -82,22 +82,6 @@ export function NakamaProvider({ children }: { children: ReactNode }) {
     // All incoming server messages are handled here and dispatched to reducer
     // This is the single point of entry for all real-time events
 
-    socket.onmatchmakermatched = (matched) => {
-      // Nakama SDK fires this when matchmaker pairs two players
-      // matched.match_id is the ID both players use to join
-      dispatch({
-        type: OPCODE.MATCHMAKER_MATCHED,
-        payload: {
-          matchId: matched.match_id!,
-          mode: "classic", // will be read from match state on join
-        },
-      });
-
-      // Automatically join the match after being matched
-      // Client must actively join — server does not push the connection
-      socket.joinMatch(matched.match_id!);
-    };
-
     socket.onmatchdata = (matchData) => {
       const opCode = matchData.op_code;
       let payload: unknown = {};
@@ -229,27 +213,33 @@ export function NakamaProvider({ children }: { children: ReactNode }) {
   // These are the C→S opcodes from your opcode table
   // Components call these — they never touch the socket directly
 
-  const joinMatchmaker = useCallback((mode: GameMode) => {
-    if (!socketRef.current) return;
+  const joinMatchmaker = useCallback(
+    (mode: GameMode) => {
+      if (!socketRef.current) return;
+      if (gameState.status !== "idle") return;
 
-    dispatch({ type: "START_MATCHMAKING", payload: { mode } });
+      dispatch({ type: "START_MATCHMAKING", payload: { mode } });
 
-    // minCount/maxCount: exactly 2 players
-    // stringProperties: carries mode so matchmaker can pair
-    //   players with the same mode preference
-    // query: filter to match only players with same mode
-    socketRef.current
-      .addMatchmaker(
-        "*", // query — * means match anyone (we filter by properties)
-        2, // minCount
-        2, // maxCount
-        { mode }, // stringProperties — mode attached to this ticket
-        {}, // numericProperties — none needed
-      )
-      .then((ticket) => {
-        matchmakerTicketRef.current = ticket.ticket!;
-      });
-  }, []);
+      // Re-register handler fresh each time we enter matchmaking
+      // Prevents stale handler from previous game accepting a second match
+      socketRef.current.onmatchmakermatched = (matched) => {
+        dispatch({
+          type: OPCODE.MATCHMAKER_MATCHED,
+          payload: { matchId: matched.match_id!, mode },
+        });
+        socketRef.current?.joinMatch(matched.match_id!);
+        // Clear handler after firing — one match per queue entry
+        if (socketRef.current) socketRef.current.onmatchmakermatched = () => {};
+      };
+
+      socketRef.current
+        .addMatchmaker("*", 2, 2, { mode }, {})
+        .then((ticket) => {
+          matchmakerTicketRef.current = ticket.ticket!;
+        });
+    },
+    [gameState.status],
+  );
 
   const cancelMatchmaker = useCallback(() => {
     if (!socketRef.current || !matchmakerTicketRef.current) return;

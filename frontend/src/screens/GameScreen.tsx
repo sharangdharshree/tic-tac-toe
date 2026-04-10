@@ -2,6 +2,7 @@ import { useNakama } from "../hooks/useNakama";
 
 export function GameScreen() {
   const { gameState, placeMark } = useNakama();
+  console.log("myId:", gameState.myId, "currentTurn:", gameState.currentTurn);
   return (
     <div>
       <p>

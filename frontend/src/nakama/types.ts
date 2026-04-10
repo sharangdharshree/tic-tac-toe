@@ -113,7 +113,6 @@ export interface ReconnectStatePayload {
 }
 
 export interface GameOverPayload {
-  result: "win" | "lose" | "draw";
   winner: string | null;
   winningLine: number[] | null;
   cause: "completion" | "forfeit" | "timeout" | "disconnect";

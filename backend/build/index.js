@@ -356,7 +356,6 @@ var matchLoop = function (ctx, logger, nk, dispatcher, tick, state, messages) {
                         moveCount: s.moveCount,
                     });
                     broadcast(dispatcher, OPCODE.GAME_OVER, {
-                        result: "win",
                         winner: senderId,
                         winningLine: winLine,
                         cause: "completion",
@@ -516,7 +515,6 @@ function handleForfeit(ctx, logger, nk, dispatcher, s, forfeitingPlayerId, cause
         reason: cause,
     });
     broadcast(dispatcher, OPCODE.GAME_OVER, {
-        result: opponent ? "win" : "draw",
         winner: (opponent === null || opponent === void 0 ? void 0 : opponent.id) || null,
         winningLine: null,
         cause: cause,
@@ -604,6 +602,20 @@ var InitModule = function (ctx, logger, nk, initializer) {
         matchTerminate: matchTerminate,
         matchSignal: matchSignal,
     });
+    // Create leaderboard if it doesn't exist
+    // operator: "increment" means scores accumulate — wins add up over time
+    // sort: "desc" means highest wins at the top
+    // reset: "" means no automatic reset (permanent leaderboard)
+    try {
+        nk.leaderboardCreate("global_wins", // leaderboard ID — must match what handleMatchEnd uses
+        false, // authoritative — only server can write
+        "descending" /* nkruntime.SortOrder.DESCENDING */, "increment" /* nkruntime.Operator.INCREMENTAL */, "", // reset schedule — empty = never resets
+        {});
+        logger.info("Leaderboard created or already exists");
+    }
+    catch (error) {
+        logger.error("Failed to create leaderboard: %v", error);
+    }
     initializer.registerMatchmakerMatched(matchmakerMatched);
     logger.info("Tic-tac-toe server initialized");
 };

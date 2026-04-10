@@ -396,7 +396,6 @@ const matchLoop: nkruntime.MatchLoopFunction = function (
           });
 
           broadcast(dispatcher, OPCODE.GAME_OVER, {
-            result: "win",
             winner: senderId,
             winningLine: winLine,
             cause: "completion",
@@ -602,7 +601,6 @@ function handleForfeit(
   });
 
   broadcast(dispatcher, OPCODE.GAME_OVER, {
-    result: opponent ? "win" : "draw",
     winner: opponent?.id || null,
     winningLine: null,
     cause,

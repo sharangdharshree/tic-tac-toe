@@ -240,17 +240,21 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       // Forfeit broadcast — game_over follows immediately after
       return { ...state };
 
-    case OPCODE.GAME_OVER:
+    case OPCODE.GAME_OVER: {
+      const winnerId = action?.payload?.winner;
+      const isDraw = winnerId === null;
+      const isWinner = winnerId === state.myId;
       return {
         ...state,
         status: "over",
-        gameResult: action.payload.result,
+        gameResult: isDraw ? "draw" : isWinner ? "win" : "lose",
         gameOverCause: action.payload.cause,
         winningLine: action.payload.winningLine,
         currentTurn: null,
         timerStartedAt: null,
         timerDurationMs: null,
       };
+    }
 
     case OPCODE.LEADERBOARD_UPDATED:
       return { ...state };
@@ -260,7 +264,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return { ...state, status: "ended" };
 
     case "RESET":
-      return { ...initialGameState };
+      return { ...initialGameState, myId: state.myId };
 
     default:
       return state;
